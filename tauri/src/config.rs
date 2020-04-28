@@ -1,208 +1,196 @@
-use serde::Deserialize;
+#![cfg_attr(rustfmt, rustfmt_skip)]
+#![allow(dead_code)]
 
-use std::env;
+use std::borrow::Cow;
 
-#[derive(PartialEq, Deserialize, Clone, Debug)]
-#[serde(tag = "window", rename_all = "camelCase")]
-pub struct WindowConfig {
-  #[serde(default = "default_width")]
-  pub width: i32,
-  #[serde(default = "default_height")]
-  pub height: i32,
-  #[serde(default = "default_resizable")]
-  pub resizable: bool,
-  #[serde(default = "default_title")]
-  pub title: String,
-  #[serde(default)]
-  pub fullscreen: bool,
-}
-
-fn default_width() -> i32 {
-  800
-}
-
-fn default_height() -> i32 {
-  600
-}
-
-fn default_resizable() -> bool {
-  true
-}
-
-fn default_title() -> String {
-  "Tauri App".to_string()
-}
-
-fn default_window() -> WindowConfig {
-  WindowConfig {
-    width: default_width(),
-    height: default_height(),
-    resizable: default_resizable(),
-    title: default_title(),
-    fullscreen: false,
-  }
-}
-
-#[derive(PartialEq, Deserialize, Clone, Debug)]
-#[serde(tag = "embeddedServer", rename_all = "camelCase")]
-pub struct EmbeddedServerConfig {
-  #[serde(default = "default_host")]
-  pub host: String,
-  #[serde(default = "default_port")]
-  pub port: String,
-}
-
-fn default_host() -> String {
-  "http://127.0.0.1".to_string()
-}
-
-fn default_port() -> String {
-  "random".to_string()
-}
-
-fn default_embedded_server() -> EmbeddedServerConfig {
-  EmbeddedServerConfig {
-    host: default_host(),
-    port: default_port(),
-  }
-}
-
-#[derive(PartialEq, Deserialize, Clone, Debug)]
-#[serde(tag = "tauri", rename_all = "camelCase")]
-pub struct TauriConfig {
-  #[serde(default = "default_window")]
-  pub window: WindowConfig,
-  #[serde(default = "default_embedded_server")]
-  pub embedded_server: EmbeddedServerConfig,
-}
-
-#[derive(PartialEq, Deserialize, Clone, Debug)]
-#[serde(tag = "build", rename_all = "camelCase")]
-pub struct BuildConfig {
-  #[serde(default = "default_dev_path")]
-  pub dev_path: String,
-}
-
-fn default_dev_path() -> String {
-  "".to_string()
-}
-
-#[derive(PartialEq, Deserialize, Clone, Debug)]
-#[serde(rename_all = "camelCase")]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
 pub struct Config {
-  #[serde(default = "default_tauri")]
-  pub tauri: TauriConfig,
-  #[serde(default = "default_build")]
-  pub build: BuildConfig,
+    pub build: _Config__build,
+    pub ctx: _Config__ctx,
+    pub tauri: _Config__tauri,
 }
 
-fn default_tauri() -> TauriConfig {
-  TauriConfig {
-    window: default_window(),
-    embedded_server: default_embedded_server(),
-  }
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__build {
+    pub beforeBuildCommand: Cow<'static, str>,
+    pub beforeDevCommand: Cow<'static, str>,
+    pub devPath: Cow<'static, str>,
+    pub distDir: Cow<'static, str>,
 }
 
-fn default_build() -> BuildConfig {
-  BuildConfig {
-    dev_path: default_dev_path(),
-  }
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__ctx {
+
 }
 
-pub fn get() -> crate::Result<Config> {
-  match option_env!("TAURI_CONFIG") {
-    Some(config) => Ok(serde_json::from_str(config).expect("failed to parse TAURI_CONFIG env")),
-    None => Ok(
-      serde_json::from_str(include_str!(concat!(env!("TAURI_DIR"), "/tauri.conf.json")))
-        .expect("failed to read tauri.conf.json"),
-    ),
-  }
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri {
+    pub bundle: _Config__tauri__bundle,
+    pub edge: _Config__tauri__edge,
+    pub embeddedServer: _Config__tauri__embeddedServer,
+    pub inliner: _Config__tauri__inliner,
+    pub security: _Config__tauri__security,
+    pub whitelist: _Config__tauri__whitelist,
+    pub window: _Config__tauri__window,
 }
 
-#[cfg(test)]
-mod test {
-  use super::*;
-  // generate a test_config based on the test fixture
-  fn create_test_config() -> Config {
-    Config {
-      tauri: TauriConfig {
-        window: WindowConfig {
-          width: 800,
-          height: 600,
-          resizable: true,
-          title: String::from("Tauri App"),
-          fullscreen: false,
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__bundle {
+    pub active: bool,
+    pub category: Cow<'static, str>,
+    pub copyright: Cow<'static, str>,
+    pub deb: _Config__tauri__bundle__deb,
+    pub exceptionDomain: Cow<'static, str>,
+    pub externalBin: Cow<'static, [()]>,
+    pub icon: Cow<'static, [Cow<'static, str>]>,
+    pub identifier: Cow<'static, str>,
+    pub longDescription: Cow<'static, str>,
+    pub osx: _Config__tauri__bundle__osx,
+    pub resources: Cow<'static, [()]>,
+    pub shortDescription: Cow<'static, str>,
+    pub targets: Cow<'static, str>,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__bundle__deb {
+    pub depends: Cow<'static, [()]>,
+    pub useBootstrapper: bool,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__bundle__osx {
+    pub frameworks: Cow<'static, [()]>,
+    pub minimumSystemVersion: Cow<'static, str>,
+    pub useBootstrapper: bool,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__edge {
+    pub active: bool,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__embeddedServer {
+    pub active: bool,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__inliner {
+    pub active: bool,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__security {
+    pub csp: Cow<'static, str>,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__whitelist {
+    pub all: bool,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[allow(non_camel_case_types)]
+pub struct _Config__tauri__window {
+    pub fullscreen: bool,
+    pub height: i64,
+    pub resizable: bool,
+    pub title: Cow<'static, str>,
+    pub width: i64,
+}
+
+pub const CONFIG: Config = Config {
+    build: _Config__build {
+        beforeBuildCommand: Cow::Borrowed(""),
+        beforeDevCommand: Cow::Borrowed(""),
+        devPath: Cow::Borrowed("http://localhost:4000"),
+        distDir: Cow::Borrowed("examples/communication/dist/"),
+    },
+    ctx: _Config__ctx {
+    },
+    tauri: _Config__tauri {
+        bundle: _Config__tauri__bundle {
+            active: true,
+            category: Cow::Borrowed("DeveloperTool"),
+            copyright: Cow::Borrowed(""),
+            deb: _Config__tauri__bundle__deb {
+                depends: Cow::Borrowed(&[]),
+                useBootstrapper: false,
+            },
+            exceptionDomain: Cow::Borrowed(""),
+            externalBin: Cow::Borrowed(&[]),
+            icon: Cow::Borrowed(&[Cow::Borrowed("icons/32x32.png"), Cow::Borrowed("icons/128x128.png"), Cow::Borrowed("icons/128x128@2x.png"), Cow::Borrowed("icons/icon.icns"), Cow::Borrowed("icons/icon.ico")]),
+            identifier: Cow::Borrowed("com.tauri.dev"),
+            longDescription: Cow::Borrowed(""),
+            osx: _Config__tauri__bundle__osx {
+                frameworks: Cow::Borrowed(&[]),
+                minimumSystemVersion: Cow::Borrowed(""),
+                useBootstrapper: false,
+            },
+            resources: Cow::Borrowed(&[]),
+            shortDescription: Cow::Borrowed(""),
+            targets: Cow::Borrowed("all"),
         },
-        embedded_server: EmbeddedServerConfig {
-          host: String::from("http://127.0.0.1"),
-          port: String::from("random"),
+        edge: _Config__tauri__edge {
+            active: true,
         },
-      },
-      build: BuildConfig {
-        dev_path: String::from("http://localhost:4000"),
-      },
+        embeddedServer: _Config__tauri__embeddedServer {
+            active: true,
+        },
+        inliner: _Config__tauri__inliner {
+            active: true,
+        },
+        security: _Config__tauri__security {
+            csp: Cow::Borrowed("default-src blob: data: filesystem: ws: http: https: 'unsafe-eval' 'unsafe-inline'"),
+        },
+        whitelist: _Config__tauri__whitelist {
+            all: true,
+        },
+        window: _Config__tauri__window {
+            fullscreen: false,
+            height: 600,
+            resizable: true,
+            title: Cow::Borrowed("Tauri App"),
+            width: 800,
+        },
+    },
+};
+
+#[cfg(debug_assertions)]
+impl Config {
+    pub fn load() -> Cow<'static, Self> {
+        let filepath = concat!(env!("CARGO_MANIFEST_DIR"), "/tauri.conf.json");
+        Self::load_from(filepath.as_ref()).expect("Failed to load Config.")
     }
-  }
 
-  #[test]
-  // test the get function.  Will only resolve to true if the TAURI_CONFIG variable is set properly to the fixture.
-  fn test_get() {
-    // get test_config
-    let test_config = create_test_config();
-
-    // call get();
-    let config = get();
-
-    // check to see if there is an OK or Err, on Err fail test.
-    match config {
-      // On Ok, check that the config is the same as the test config.
-      Ok(c) => assert_eq!(c, test_config),
-      Err(_) => assert!(false),
+    pub fn load_from(filepath: &::std::path::Path) -> Result<Cow<'static, Self>, Box<dyn ::std::error::Error>> {
+        let file_contents = ::std::fs::read_to_string(filepath)?;
+        let result: Self = ::serde_json::from_str(&file_contents)?;
+        Ok(Cow::Owned(result))
     }
-  }
+}
 
-  #[test]
-  // test all of the default functions
-  fn test_defaults() {
-    // get default tauri config
-    let t_config = default_tauri();
-    // get default build config
-    let b_config = default_build();
-    // get default dev path
-    let d_path = default_dev_path();
-    // get default embedded server
-    let de_server = default_embedded_server();
-    // get default window
-    let d_window = default_window();
-    // get default title
-    let d_title = default_title();
+#[cfg(not(debug_assertions))]
+impl Config {
+    #[inline(always)]
+    pub fn load() -> Cow<'static, Self> {
+        Cow::Borrowed(&CONFIG)
+    }
 
-    // create a tauri config.
-    let tauri = TauriConfig {
-      window: WindowConfig {
-        width: 800,
-        height: 600,
-        resizable: true,
-        title: String::from("Tauri App"),
-        fullscreen: false,
-      },
-      embedded_server: EmbeddedServerConfig {
-        host: String::from("http://127.0.0.1"),
-        port: String::from("random"),
-      },
-    };
-
-    // create a build config
-    let build = BuildConfig {
-      dev_path: String::from(""),
-    };
-
-    // test the configs
-    assert_eq!(t_config, tauri);
-    assert_eq!(b_config, build);
-    assert_eq!(de_server, tauri.embedded_server);
-    assert_eq!(d_path, String::from(""));
-    assert_eq!(d_title, tauri.window.title);
-    assert_eq!(d_window, tauri.window);
-  }
+    #[inline(always)]
+    pub fn load_from(_: &::std::path::Path) -> Result<Cow<'static, Self>, Box<dyn ::std::error::Error>> {
+        Ok(Cow::Borrowed(&CONFIG))
+    }
 }

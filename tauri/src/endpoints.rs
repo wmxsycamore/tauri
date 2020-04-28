@@ -1,8 +1,10 @@
 mod cmd;
-mod salt;
+mod dialog;
 #[allow(dead_code)]
 mod file_system;
-mod dialog;
+mod salt;
+
+use crate::config::Config;
 
 #[cfg(not(any(feature = "dev-server", feature = "embedded-server")))]
 use std::path::PathBuf;
@@ -149,7 +151,7 @@ pub(crate) fn handle<T: 'static>(webview: &mut WebView<'_, T>, arg: &str) -> cra
         OpenDialog {
           options,
           callback,
-          error
+          error,
         } => {
           dialog::open(webview, options, callback, error);
         }
@@ -263,6 +265,7 @@ fn load_asset<T: 'static>(
   error: String,
 ) -> crate::Result<()> {
   let handle = webview.handle();
+  let config = Config::load().into_owned();
   crate::execute_promise(
     webview,
     move || {
@@ -273,11 +276,9 @@ fn load_asset<T: 'static>(
       });
       let mut read_asset;
       loop {
-        read_asset = crate::assets::ASSETS.get(&format!(
-          "{}/{}",
-          env!("TAURI_DIST_DIR"),
-          path.to_string_lossy()
-        ));
+        let config = config.clone();
+        let dist_dir = config.build.distDir.into_owned();
+        read_asset = crate::assets::ASSETS.get(&format!("{}/{}", dist_dir, path.to_string_lossy()));
         if read_asset.is_err() {
           match path.iter().next() {
             Some(component) => {
