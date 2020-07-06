@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.8.1]
+
+-   Fixes the assets embedding into the binary.
+
 ## [0.8.0]
 
 -   Create UMD, ESM and CJS artifacts for the JavaScript API entry point from TS source using rollup.
